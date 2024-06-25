@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import os
 
-def dilation(Input_folder,output_folder):
+def dilation(Input_folder,output_folder, iterations=20):
     # 定义膨胀核
     kernel = np.ones((5, 5), np.uint8)  # 这里的(5, 5)可以根据需求调整膨胀核的大小
 
@@ -20,8 +20,13 @@ def dilation(Input_folder,output_folder):
             filepath = os.path.join(Input_folder, filename)
             image = cv2.imread(filepath, 0)  # 以灰度模式读取
 
+            # 若膨脹後的圖片已存在，則跳過
+            if os.path.exists(os.path.join(output_folder, filename)):
+                print(f"File {filename} already exists in output directory. Skipping...")
+                continue
+
             # 进行膨胀操作
-            dilated_image = cv2.dilate(image, kernel, iterations=15)
+            dilated_image = cv2.dilate(image, kernel, iterations)
 
             # 写入膨胀后的图片到输出文件夹
             output_filepath = os.path.join(output_folder, filename)

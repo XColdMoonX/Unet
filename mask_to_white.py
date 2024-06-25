@@ -5,6 +5,11 @@ import concurrent.futures
 def Convert2white(input_image_path, output_image_path):
     try:
         with Image.open(input_image_path) as image:
+            # 若輸出圖片已經存在，則跳過
+            if os.path.exists(output_image_path):
+                print(f"File {output_image_path} already exists. Skipping...")
+                return
+            
             if image.mode != 'RGBA':
                 image = image.convert('RGBA')
 
@@ -20,7 +25,7 @@ def Convert2white(input_image_path, output_image_path):
                         new_data.append((0, 0, 0, 255))  # 黑色
                     else:
                         new_data.append((255, 255, 255, 255))  # 白色
-
+            
             image.putdata(new_data)
             image.save(output_image_path)
         print(f"Processed: {input_image_path}")
@@ -51,5 +56,3 @@ def batch_convert(input_folder, output_folder):
                 future.result()
             except Exception as e:
                 print(f"Error in thread: {e}")
-
-    print("Batch conversion completed.")

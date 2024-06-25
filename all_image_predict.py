@@ -7,7 +7,7 @@ from tqdm import tqdm
 # Input_folder =    # 輸入資料夾
 # output_folder =   # 輸出資料夾
 # OutputExt =   # 輸出檔案的副檔名
-def all_predict(PredictPath, ModelPath, Input_folder, output_folder, OutputExt):
+def all_predict(PredictPath, ModelPath, Input_folder, output_folder, OutputExt = ".png"):
     # 獲取輸入資料夾中的所有.jpg檔案
     input_files = [f for f in os.listdir(Input_folder) if f.endswith('.jpg')]
 

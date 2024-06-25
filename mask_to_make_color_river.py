@@ -22,7 +22,11 @@ def mask_cut_image(mask_folder, image_folder, output_folder):
         # 讀取遮罩和圖片
         mask = cv2.imread(os.path.join(mask_folder, mask_file), cv2.IMREAD_GRAYSCALE)
         image = cv2.imread(os.path.join(image_folder, image_file))
-
+        # 若輸出圖片已經存在，則跳過
+        if os.path.exists(os.path.join(output_folder, image_file)):
+            print(f"File {image_file} already exists in output directory. Skipping...")
+            continue
+        
         # 確保遮罩和圖片的尺寸相同
         assert mask.shape == image.shape[:2], "Mask and image must have the same dimensions"
 
