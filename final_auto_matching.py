@@ -3,6 +3,8 @@ from mask_dilation import dilation
 from mask_to_white import batch_convert
 from mask_to_make_color_river import mask_cut_image
 from concat_pic import Merge
+#  PredictPath、ModelPath、OriginDir必須已經存在
+#  其他資料夾則可以存在or不存在
 PredictPath = "D:\\Jonas\\PythonSpace\\Pytorch-UNet\\predict.py" #predict.py的路徑
 ModelPath = "D:\\Jonas\\PythonSpace\\checkpoint\\2_checkpoint_epoch1_1.pth" # model.pth的路徑
 
