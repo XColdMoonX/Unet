@@ -2,7 +2,6 @@ from all_image_predict import all_predict
 from mask_dilation import dilation
 from mask_to_make_color_river import mask_cut_image
 from mask_to_white import batch_convert
-from concat_pic import handleMulti
 
 PredictPath = "D:\\Jonas\\PythonSpace\\Pytorch-UNet\\predict.py" #predict.py的路徑
 ModelPath = "D:\\Jonas\\PythonSpace\\checkpoint\\2_checkpoint_epoch1_1.pth" # model.pth的路徑
@@ -33,4 +32,3 @@ mask_cut_image(DilationWihteDir,OriginDir,CutDir)       #  mask_cut_image(mask_f
 print("\033[31;40m Cut Done \033[0m ")
 
 #進行合併
-#handleMulti()                                          #  handleMulti(放入多張圖片)
