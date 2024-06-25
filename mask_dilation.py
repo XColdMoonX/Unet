@@ -2,22 +2,22 @@ import cv2
 import numpy as np
 import os
 
-def dilation(input_folder,output_folder):
+def dilation(Input_folder,output_folder):
     # 定义膨胀核
     kernel = np.ones((5, 5), np.uint8)  # 这里的(5, 5)可以根据需求调整膨胀核的大小
 
     # 指定输入文件夹和输出文件夹
-    # input_folder = "D:\Python practice\practice 1\Pytorch-UNet-3.0\data\BW\MASK"
+    # Input_folder = "D:\Python practice\practice 1\Pytorch-UNet-3.0\data\BW\MASK"
     # output_folder = "D:\Python practice\practice 1\Pytorch-UNet-3.0\data\BW\FIXD_MASK"
 
-    # 确保输出文件夹存在，如果不存在则创建
+    # 确保输出文件夹存在，如果不存在則創建
     os.makedirs(output_folder, exist_ok=True)
 
     # 遍历输入文件夹中的所有文件
-    for filename in os.listdir(input_folder):
+    for filename in os.listdir(Input_folder):
         if filename.endswith('.jpg') or filename.endswith('.png'):
             # 读取图片
-            filepath = os.path.join(input_folder, filename)
+            filepath = os.path.join(Input_folder, filename)
             image = cv2.imread(filepath, 0)  # 以灰度模式读取
 
             # 进行膨胀操作

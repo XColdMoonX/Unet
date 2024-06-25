@@ -29,9 +29,12 @@ def Convert2white(input_image_path, output_image_path):
 
 
 def batch_convert(input_folder, output_folder):
-    if not os.path.isdir(input_folder) or not os.path.isdir(output_folder):
+    if not os.path.isdir(input_folder):
         print("請輸入正確的資料夾路徑")
         return
+
+    # 确保输出文件夹存在，如果不存在則創建
+    os.makedirs(output_folder, exist_ok=True)
 
     file_list = [file_name for file_name in os.listdir(input_folder) if file_name.endswith(".png")]
     if not file_list:

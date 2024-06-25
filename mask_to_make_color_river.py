@@ -11,6 +11,9 @@ def mask_cut_image(mask_folder, image_folder, output_folder):
     mask_files = os.listdir(mask_folder)
     image_files = os.listdir(image_folder)
 
+    # 确保输出文件夹存在，如果不存在則創建
+    os.makedirs(output_folder, exist_ok=True)
+
     # 確保遮罩和圖片數量相同
     assert len(mask_files) == len(image_files), "Number of masks and images must be the same"
 
@@ -30,4 +33,4 @@ def mask_cut_image(mask_folder, image_folder, output_folder):
         result[mask == 255] = image[mask == 255]
 
         # 保存結果圖片
-        cv2.imwrite(os.path.join(output_folder, 'result_' + image_file), result)
+        cv2.imwrite(os.path.join(output_folder, image_file), result)

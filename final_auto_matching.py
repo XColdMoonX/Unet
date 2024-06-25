@@ -1,17 +1,17 @@
 from all_image_predict import all_predict
 from mask_dilation import dilation
-from mask_to_make_color_river import mask_cut_image
 from mask_to_white import batch_convert
+from mask_to_make_color_river import mask_cut_image
 
 PredictPath = "D:\\Jonas\\PythonSpace\\Pytorch-UNet\\predict.py" #predict.py的路徑
 ModelPath = "D:\\Jonas\\PythonSpace\\checkpoint\\2_checkpoint_epoch1_1.pth" # model.pth的路徑
 
-OriginDir = "D:\\Jonas\\RiverData\\Test\\301"  # 初始原本圖片的資料夾
-MaskDir = "D:\\Jonas\\RiverData\\Test\\301_Pre"  # 輸出遮罩的資料夾
+OriginDir = "D:\\Jonas\\RiverData\\Test\\370"  # 初始原本圖片的資料夾
+MaskDir = "D:\\Jonas\\RiverData\\Test\\370_Pre"  # 輸出遮罩的資料夾
 
-DilationDir = "D:\\Jonas\\RiverData\\Test\\301_Pre_Dilation"  # 輸出膨脹的資料夾
-DilationWihteDir = "D:\\Jonas\\RiverData\\Test\\301_Pre_Dilation_White"  # 輸出膨脹的白色遮罩的資料夾
-CutDir = "D:\\Jonas\\RiverData\\Test\\301_Pre_Cut"  # 輸出切割的資料夾
+DilationDir = "D:\\Jonas\\RiverData\\Test\\370_Pre_Dilation"  # 輸出膨脹的資料夾
+DilationWihteDir = "D:\\Jonas\\RiverData\\Test\\370_Pre_Dilation_White"  # 輸出膨脹的白色遮罩的資料夾
+CutDir = "D:\\Jonas\\RiverData\\Test\\370_Pre_Cut"  # 輸出切割的資料夾
 
 print("\033[31;40m Start \033[0m ")
 
