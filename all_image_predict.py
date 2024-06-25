@@ -9,7 +9,7 @@ import subprocess
 
 from tqdm import tqdm
 
-def all_predict(PredictPath, ModelPath, InputDir, OutputDir):
+def all_predict(PredictPath, ModelPath, InputDir, OutputDir, OutputExt):
     # 獲取輸入資料夾中的所有.jpg檔案
     input_files = [f for f in os.listdir(InputDir) if f.endswith('.jpg')]
 
@@ -17,7 +17,7 @@ def all_predict(PredictPath, ModelPath, InputDir, OutputDir):
     for file in tqdm(input_files, desc="Processing files"):
         print(f"Processing file: {file}")  # 顯示目前正在處理的檔案
         InputPath = os.path.join(InputDir, file)  # 完整的輸入檔案路徑
-        OutputFileName = os.path.splitext(file)[0] + '.png'  # 將輸出檔案的副檔名改為.png
+        OutputFileName = os.path.splitext(file)[0] + OutputExt  # 將輸出檔案的副檔名改為.png
         OutputPath = os.path.join(OutputDir, OutputFileName)  # 完整的輸出檔案路徑
 
         # 檢查輸出資料夾中是否已經存在相同名稱的檔案，若有，則跳過這個檔案

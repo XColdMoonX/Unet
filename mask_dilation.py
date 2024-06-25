@@ -7,8 +7,8 @@ def dilation(input_folder,output_folder):
     kernel = np.ones((5, 5), np.uint8)  # 这里的(5, 5)可以根据需求调整膨胀核的大小
 
     # 指定输入文件夹和输出文件夹
-    #input_folder = "D:\Python practice\practice 1\Pytorch-UNet-3.0\data\BW\MASK"
-    #output_folder = "D:\Python practice\practice 1\Pytorch-UNet-3.0\data\BW\FIXD_MASK"
+    # input_folder = "D:\Python practice\practice 1\Pytorch-UNet-3.0\data\BW\MASK"
+    # output_folder = "D:\Python practice\practice 1\Pytorch-UNet-3.0\data\BW\FIXD_MASK"
 
     # 确保输出文件夹存在，如果不存在则创建
     os.makedirs(output_folder, exist_ok=True)
