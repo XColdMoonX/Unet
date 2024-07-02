@@ -288,31 +288,39 @@ def Merge(input_folder, output_folder):
     # Ensure output folder exists
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
-    
-    # List all files in input folder and sort them to ensure correct order
+    output_folder_2 = output_folder + "\\chach"
+    if not os.path.exists(output_folder_2):
+        os.makedirs(output_folder_2)
+
     files = sorted([f for f in os.listdir(input_folder) if os.path.isfile(os.path.join(input_folder, f))])
-    
-    # Initial setup for the first file
-    current_file = os.path.join(input_folder, files[0])
-    
-    for i in range(1, len(files)):
-        next_file = os.path.join(input_folder, files[i])
 
-        print(f"Merging {current_file} and {next_file}...")
-        # Perform merging
-        result = handleMulti(current_file, next_file, isShow=False)
-        
-        # Define the output file path
-        output_file_path = os.path.join(output_folder, f"concat_{i}.jpg")
-        
-        # Save the result
-        cv2.imwrite(output_file_path, cv2.cvtColor(result, cv2.COLOR_RGB2BGR))
-        
-        # Free up memory
-        del result
-        gc.collect()
-        
-        # Update current_file to the newly created output for the next iteration
+    for i in range(0, len(files)-1):
+        img_path_1 = os.path.join(input_folder, files[i])
+        img_path_2 = os.path.join(input_folder, files[i+1])
+        if not os.path.isfile(img_path_1) or not os.path.isfile(img_path_2):
+            print(f"File not found: {img_path_1} or {img_path_2}")
+            continue  # Skip this iteration if either file is missing
+        firstresult = handleMulti(img_path_1, img_path_2, isShow=False)
+        if firstresult is None:
+            print(f"Failed to merge {img_path_1} and {img_path_2}")
+            continue  # Skip saving if merging failed
+        output_file_2_path = os.path.join(output_folder_2, f"concat2_{i}.jpg")
+        cv2.imwrite(output_file_2_path, cv2.cvtColor(firstresult, cv2.COLOR_RGB2BGR))
+    print("First Merging completed.")
+
+    files2 = sorted([f for f in os.listdir(output_folder_2) if os.path.isfile(os.path.join(output_folder_2, f))])
+    current_file = os.path.join(output_folder_2, files2[0])  # Fixed to use files2[0] instead of files[0]
+
+    for i in range(1, len(files2)):
+        next_file = os.path.join(output_folder_2, files2[i])  # Fixed to use files from output_folder_2
+        if not os.path.isfile(current_file) or not os.path.isfile(next_file):
+            print(f"File not found: {current_file} or {next_file}")
+            continue  # Skip this iteration if either file is missing
+        finalresult = handleMulti(current_file, next_file, isShow=False)
+        if finalresult is None:
+            print(f"Failed to merge {current_file} and {next_file}")
+            continue  # Skip saving if merging failed
+        output_file_path = os.path.join(output_folder, f"concat2_{i}.jpg")
+        cv2.imwrite(output_file_path, cv2.cvtColor(finalresult, cv2.COLOR_RGB2BGR))
         current_file = output_file_path
-
-    print("Merging completed.")
+    print("Final Merging completed.")

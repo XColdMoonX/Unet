@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import os
 
-def dilation(Input_folder,output_folder, iterations=20):
+def dilation(Input_folder,output_folder):
     # 定义膨胀核
     kernel = np.ones((5, 5), np.uint8)  # 这里的(5, 5)可以根据需求调整膨胀核的大小
 
@@ -25,8 +25,9 @@ def dilation(Input_folder,output_folder, iterations=20):
                 print(f"File {filename} already exists in output directory. Skipping...")
                 continue
 
+            erode_image = cv2.erode(image, kernel, iterations = 10)
             # 进行膨胀操作
-            dilated_image = cv2.dilate(image, kernel, iterations)
+            dilated_image = cv2.dilate(erode_image, kernel, iterations = 40)
 
             # 写入膨胀后的图片到输出文件夹
             output_filepath = os.path.join(output_folder, filename)
