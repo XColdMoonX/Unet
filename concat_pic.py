@@ -320,7 +320,10 @@ def Merge(input_folder, output_folder):
         if finalresult is None:
             print(f"Failed to merge {current_file} and {next_file}")
             continue  # Skip saving if merging failed
-        output_file_path = os.path.join(output_folder, f"concat2_{i}.jpg")
+        output_file_path = os.path.join(output_folder_2, f"concatfinal_{i}.jpg")
         cv2.imwrite(output_file_path, cv2.cvtColor(finalresult, cv2.COLOR_RGB2BGR))
         current_file = output_file_path
+        if(i == len(files2)):
+            output_file_path = os.path.join(output_folder, f"finalresult.jpg")
+            cv2.imwrite(output_file_path, cv2.cvtColor(finalresult, cv2.COLOR_RGB2BGR))
     print("Final Merging completed.")
