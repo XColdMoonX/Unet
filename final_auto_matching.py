@@ -9,12 +9,12 @@ PredictPath = "D:\\Jonas\\PythonSpace\\Pytorch-UNet\\predict.py" #predict.py的�
 ModelPath = "D:\\Jonas\\PythonSpace\\checkpoint\\River_model_0702.pth" # model.pth的路徑
 
 OriginDir = "D:\\Jonas\\RiverData\\Test\\361"  # 初始原本圖片的資料夾
-MaskDir = "D:\\Jonas\\RiverData\\Test\\361_Pre"  # 輸出遮罩的資料夾
+MaskDir = OriginDir + "_Pre"  # 輸出遮罩的資料夾
 
-DilationDir = "D:\\Jonas\\RiverData\\Test\\361_Pre_Dilation"  # 輸出膨脹的資料夾
-DilationWihteDir = "D:\\Jonas\\RiverData\\Test\\361_Pre_Dilation_White"  # 輸出膨脹的白色遮罩的資料夾
-CutDir = "D:\\Jonas\\RiverData\\Test\\361_Pre_Cut"  # 輸出切割的資料夾
-MergerDir = "D:\\Jonas\\RiverData\\Test\\361_Merge"  # 輸出合併的資料夾
+DilationDir = OriginDir + "_Pre_Dilation"  # 輸出膨脹的資料夾
+DilationWihteDir = OriginDir + "_Pre_Dilation_White"  # 輸出膨脹的白色遮罩的資料夾
+CutDir = OriginDir + "_Pre_Cut"  # 輸出切割的資料夾
+MergerDir = OriginDir + "_Merge"  # 輸出合併的資料夾
 
 print("\033[31;40m Start \033[0m ")
 
@@ -37,3 +37,11 @@ print("\033[31;40m Cut Done \033[0m ")
 #進行合併
 Merge(CutDir,MergerDir)
 print("\033[31;40m Merge Done \033[0m ")
+
+# import shutil
+
+# # 刪除指定的資料夾
+# shutil.rmtree(MaskDir, ignore_errors=True)
+# shutil.rmtree(DilationDir, ignore_errors=True)
+# shutil.rmtree(DilationWihteDir, ignore_errors=True)
+# shutil.rmtree(CutDir, ignore_errors=True)
