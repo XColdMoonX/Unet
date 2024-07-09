@@ -12,7 +12,7 @@ def dilation(Input_folder, output_folder):
     dilate_iterations = config.getint("Dilation", "dilate_iterations")
     # 定义膨胀核
     kernel = np.ones(
-        (kernel_size, kernel_size), np.uint8
+        (int(kernel_size), int(kernel_size)), np.uint8
     )  # 这里的(5, 5)可以根据需求调整膨胀核的大小
 
     # 指定输入文件夹和输出文件夹
@@ -36,9 +36,12 @@ def dilation(Input_folder, output_folder):
                 )
                 continue
 
-            erode_image = cv2.erode(image, kernel, erode_iterations)
+            erode_image = cv2.erode(image, kernel, iterations=erode_iterations)
+
             # 进行膨胀操作
-            dilated_image = cv2.dilate(erode_image, kernel, dilate_iterations)
+            dilated_image = cv2.dilate(
+                erode_image, kernel, iterations=dilate_iterations
+            )
 
             # 写入膨胀后的图片到输出文件夹
             output_filepath = os.path.join(output_folder, filename)
