@@ -1,8 +1,9 @@
 import tkinter as tk
-from tkinter import filedialog, ttk
+from tkinter import filedialog, ttk, messagebox
 import configparser
 import os
-from all_image_predict import all_predict
+import shutil
+from all_image_predict import all_predict  # 假设这些模块是你自己定义的
 from mask_dilation import dilation
 from mask_to_white import batch_convert
 from mask_to_make_color_river import mask_cut_image
@@ -80,7 +81,7 @@ def save_config():
 
 def execute_functions():
     config = configparser.ConfigParser()
-    config.read("config.ini")
+    config.read("config.ini", encoding="utf-8-sig")
 
     PredictPath = config["Paths"]["PredictPath"]
     ModelPath = config["Paths"]["ModelPath"]
@@ -142,6 +143,42 @@ def load_config():
     ratio_entry.insert(0, config["Concat"].get("ratio", ""))
 
 
+def clear_paths():
+    config = configparser.ConfigParser()
+    config.read("config.ini")
+
+    config["Paths"]["PredictPath"] = ""
+    config["Paths"]["ModelPath"] = ""
+    config["Paths"]["OriginDir"] = ""
+    config["Paths"]["MaskDir"] = ""
+    config["Paths"]["DilationDir"] = ""
+    config["Paths"]["DilationWhiteDir"] = ""
+    config["Paths"]["CutDir"] = ""
+    config["Paths"]["MergerDir"] = ""
+
+    with open("config.ini", "w") as configfile:
+        config.write(configfile)
+
+    predict_path_entry.delete(0, tk.END)
+    model_path_entry.delete(0, tk.END)
+    origin_dir_entry.delete(0, tk.END)
+    mask_dir_entry.delete(0, tk.END)
+    dilation_dir_entry.delete(0, tk.END)
+    dilation_white_dir_entry.delete(0, tk.END)
+    cut_dir_entry.delete(0, tk.END)
+    merger_dir_entry.delete(0, tk.END)
+
+    messagebox.showinfo("Success", "Paths cleared successfully!")
+
+
+def clear_related_paths(*args):
+    mask_dir_entry.delete(0, tk.END)
+    dilation_dir_entry.delete(0, tk.END)
+    dilation_white_dir_entry.delete(0, tk.END)
+    cut_dir_entry.delete(0, tk.END)
+    merger_dir_entry.delete(0, tk.END)
+
+
 root = tk.Tk()
 root.title("Parameter Selector")
 
@@ -165,6 +202,9 @@ origin_dir_entry.grid(row=2, column=1, padx=10, pady=5)
 tk.Button(root, text="Browse", command=lambda: select_directory(origin_dir_entry)).grid(
     row=2, column=2, padx=10, pady=5
 )
+origin_dir_entry_var = tk.StringVar()
+origin_dir_entry["textvariable"] = origin_dir_entry_var
+origin_dir_entry_var.trace_add("write", clear_related_paths)
 
 tk.Label(root, text="Mask Directory:").grid(row=3, column=0, padx=10, pady=5)
 mask_dir_entry = tk.Entry(root, width=50)
@@ -227,6 +267,10 @@ tk.Button(root, text="Save Config", command=save_config).grid(
 
 tk.Button(root, text="Execute", command=execute_functions).grid(
     row=14, column=1, padx=10, pady=20
+)
+
+tk.Button(root, text="Clear Paths", command=clear_paths).grid(
+    row=14, column=2, padx=10, pady=20
 )
 
 load_config()
