@@ -43,12 +43,16 @@ def save_config():
     merger_dir = merger_dir_entry.get() or os.path.join(
         base_dir, os.path.basename(origin_dir) + "_Merge"
     )
+    feature_dir = feature_dir_entry.get() or os.path.join(
+        base_dir, os.path.basename(origin_dir) + "_Feature"
+    )
 
     os.makedirs(mask_dir, exist_ok=True)
     os.makedirs(dilation_dir, exist_ok=True)
     os.makedirs(dilation_white_dir, exist_ok=True)
     os.makedirs(cut_dir, exist_ok=True)
     os.makedirs(merger_dir, exist_ok=True)
+    os.makedirs(feature_dir, exist_ok=True)
 
     config["Paths"] = {
         "PredictPath": predict_path_entry.get(),
@@ -59,6 +63,7 @@ def save_config():
         "DilationWhiteDir": dilation_white_dir,
         "CutDir": cut_dir,
         "MergerDir": merger_dir,
+        "FeatureDir": feature_dir,
     }
 
     config["Dilation"] = {
@@ -91,12 +96,14 @@ def execute_functions():
     DilationWhiteDir = config["Paths"]["DilationWhiteDir"]
     CutDir = config["Paths"]["CutDir"]
     MergerDir = config["Paths"]["MergerDir"]
+    FeatureDir = config["Paths"]["FeatureDir"]
 
     os.makedirs(MaskDir, exist_ok=True)
     os.makedirs(DilationDir, exist_ok=True)
     os.makedirs(DilationWhiteDir, exist_ok=True)
     os.makedirs(CutDir, exist_ok=True)
     os.makedirs(MergerDir, exist_ok=True)
+    os.makedirs(FeatureDir, exist_ok=True)
 
     print("\033[31;40m Start \033[0m ")
 
@@ -133,6 +140,7 @@ def load_config():
     dilation_white_dir_entry.insert(0, config["Paths"].get("DilationWhiteDir", ""))
     cut_dir_entry.insert(0, config["Paths"].get("CutDir", ""))
     merger_dir_entry.insert(0, config["Paths"].get("MergerDir", ""))
+    feature_dir_entry.insert(0, config["Paths"].get("FeatureDir", ""))
 
     kernel_size_entry.insert(0, config["Dilation"].get("kernel_size", ""))
     erode_iterations_entry.insert(0, config["Dilation"].get("erode_iterations", ""))
@@ -155,6 +163,7 @@ def clear_paths():
     config["Paths"]["DilationWhiteDir"] = ""
     config["Paths"]["CutDir"] = ""
     config["Paths"]["MergerDir"] = ""
+    config["Paths"]["FeatureDir"] = ""
 
     with open("config.ini", "w") as configfile:
         config.write(configfile)
@@ -167,6 +176,7 @@ def clear_paths():
     dilation_white_dir_entry.delete(0, tk.END)
     cut_dir_entry.delete(0, tk.END)
     merger_dir_entry.delete(0, tk.END)
+    feature_dir_entry.delete(0, tk.END)
 
     messagebox.showinfo("Success", "Paths cleared successfully!")
 
@@ -177,6 +187,7 @@ def clear_related_paths(*args):
     dilation_white_dir_entry.delete(0, tk.END)
     cut_dir_entry.delete(0, tk.END)
     merger_dir_entry.delete(0, tk.END)
+    feature_dir_entry.delete(0, tk.END)
 
 
 root = tk.Tk()
@@ -225,6 +236,10 @@ cut_dir_entry.grid(row=6, column=1, padx=10, pady=5)
 tk.Label(root, text="Merger Directory:").grid(row=7, column=0, padx=10, pady=5)
 merger_dir_entry = tk.Entry(root, width=50)
 merger_dir_entry.grid(row=7, column=1, padx=10, pady=5)
+
+tk.Label(root, text="Feature Directory:").grid(row=7, column=0, padx=10, pady=5)
+feature_dir_entry = tk.Entry(root, width=50)
+feature_dir_entry.grid(row=7, column=1, padx=10, pady=5)
 
 tk.Label(root, text="Kernel Size:").grid(row=8, column=0, padx=10, pady=5)
 kernel_size_entry = tk.Entry(root, width=50)

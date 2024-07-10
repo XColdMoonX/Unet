@@ -7,6 +7,9 @@ import math
 from numpy.core.defchararray import array
 import configparser
 
+global_variable = 0
+global_variable2 = 0
+
 
 # ================================================================== #
 #                     选择特征提取器函数
@@ -105,12 +108,12 @@ def swap(a, b):
 #                     主要的函数
 #                合并两张图（合并多张图基于此函数）
 # ================================================================== #
-def handle(path1, path2, isShow=False):
+def handle(path1, path2, isShow=True):
     """
     定义超参数
     """
     config = configparser.ConfigParser()
-    config.read("Config.ini")
+    config.read("config.ini")
 
     feature_extractor = config["Concat"]["feature_extractor"]
     feature_matching = config["Concat"]["feature_matching"]
@@ -152,14 +155,14 @@ def handle(path1, path2, isShow=False):
     """
     显示关键点
     """
-    if isShow:
-        fig, (ax1, ax2) = plt.subplots(
-            nrows=1, ncols=2, figsize=(10, 4), constrained_layout=False
-        )
-        ax1.imshow(cv2.drawKeypoints(imageA_gray, kpsA, None, color=(0, 255, 0)))
-        ax1.set_xlabel("(a)key point", fontsize=14)
-        ax2.imshow(cv2.drawKeypoints(imageB_gray, kpsB, None, color=(0, 255, 0)))
-        ax2.set_xlabel("(b)key point", fontsize=14)
+    # if isShow:
+    #     fig, (ax1, ax2) = plt.subplots(
+    #         nrows=1, ncols=2, figsize=(10, 4), constrained_layout=False
+    #     )
+    #     ax1.imshow(cv2.drawKeypoints(imageA_gray, kpsA, None, color=(0, 255, 0)))
+    #     ax1.set_xlabel("(a)key point", fontsize=14)
+    #     ax2.imshow(cv2.drawKeypoints(imageB_gray, kpsB, None, color=(0, 255, 0)))
+    #     ax2.set_xlabel("(b)key point", fontsize=14)
 
     """
     进行特征匹配
@@ -195,7 +198,12 @@ def handle(path1, path2, isShow=False):
     """
     if isShow:
         fig = plt.figure(figsize=(10, 4))
-        plt.imshow(img3)
+        # plt.imshow(img3)
+        output_folder_2 = config.get("Paths", "featuredir")
+        output_file_path = os.path.join(
+            output_folder_2, f"concat_round{global_variable2}_{global_variable}.jpg"
+        )
+        cv2.imwrite(output_file_path, img3)
         plt.title("feature match")
         plt.axis("off")
     """
@@ -261,7 +269,7 @@ def handle(path1, path2, isShow=False):
 # ================================================================== #
 #                     合并多张图
 # ================================================================== #
-def handleMulti(*args, isShow=False):
+def handleMulti(*args, isShow=True):
     print(isShow)
     l = len(args)
     if isShow:
@@ -347,6 +355,11 @@ if __name__ == "__main__":
 
 
 def Merge(input_folder, output_folder):
+    global global_variable
+    global global_variable2
+    global_variable = 0
+    global_variable2 = 1
+
     # Ensure output folder exists
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
@@ -363,6 +376,7 @@ def Merge(input_folder, output_folder):
     )
 
     for i in range(0, len(files) - 1):
+        global_variable = i
         img_path_1 = os.path.join(input_folder, files[i])
         img_path_2 = os.path.join(input_folder, files[i + 1])
         if not os.path.isfile(img_path_1) or not os.path.isfile(img_path_2):
@@ -388,6 +402,8 @@ def Merge(input_folder, output_folder):
     )  # Fixed to use files2[0] instead of files[0]
 
     for i in range(1, len(files2)):
+        global_variable2 = 2
+        global_variable = i
         next_file = os.path.join(
             output_folder_2, files2[i]
         )  # Fixed to use files from output_folder_2
@@ -404,4 +420,5 @@ def Merge(input_folder, output_folder):
         if i == len(files2):
             output_file_path = os.path.join(output_folder, f"finalresult.jpg")
             cv2.imwrite(output_file_path, cv2.cvtColor(finalresult, cv2.COLOR_RGB2BGR))
+            global_variable = i + 1
     print("Final Merging completed.")
