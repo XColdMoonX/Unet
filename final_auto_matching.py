@@ -5,16 +5,16 @@ from mask_to_make_color_river import mask_cut_image
 from concat_pic import Merge
 #  PredictPath、ModelPath、OriginDir必須已經存在
 #  其他資料夾則可以存在or不存在
-PredictPath = "D:\\Jonas\\PythonSpace\\Pytorch-UNet\\predict.py" #predict.py的路徑
-ModelPath = "D:\\Jonas\\PythonSpace\\checkpoint\\River_model_0702.pth" # model.pth的路徑
+PredictPath = "" #predict.py的路徑
+ModelPath = "" # model.pth的路徑
 
-OriginDir = "D:\\Jonas\\RiverData\\Test\\361"  # 初始原本圖片的資料夾
-MaskDir = OriginDir + "_Pre"  # 輸出遮罩的資料夾
+OriginDir = ""  # 初始原本圖片的資料夾
+MaskDir = OriginDir + "\\Pre"  # 輸出遮罩的資料夾
 
-DilationDir = OriginDir + "_Pre_Dilation"  # 輸出膨脹的資料夾
-DilationWihteDir = OriginDir + "_Pre_Dilation_White"  # 輸出膨脹的白色遮罩的資料夾
-CutDir = OriginDir + "_Pre_Cut"  # 輸出切割的資料夾
-MergerDir = OriginDir + "_Merge"  # 輸出合併的資料夾
+DilationDir = OriginDir + "\\Dilation"  # 輸出膨脹的資料夾
+DilationWihteDir = OriginDir + "\\White"  # 輸出膨脹的白色遮罩的資料夾
+CutDir = OriginDir + "\\Cut"  # 輸出切割的資料夾
+MergerDir = OriginDir + "\\Merge"  # 輸出合併的資料夾
 
 print("\033[31;40m Start \033[0m ")
 
