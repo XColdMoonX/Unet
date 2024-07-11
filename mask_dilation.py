@@ -16,14 +16,13 @@ def dilation(Input_folder,output_folder):
     # 遍历输入文件夹中的所有文件
     for filename in os.listdir(Input_folder):
         if filename.endswith('.jpg') or filename.endswith('.png'):
-            # 读取图片
-            filepath = os.path.join(Input_folder, filename)
-            image = cv2.imread(filepath, 0)  # 以灰度模式读取
-
             # 若膨脹後的圖片已存在，則跳過
             if os.path.exists(os.path.join(output_folder, filename)):
                 print(f"File {filename} already exists in output directory. Skipping...")
                 continue
+            # 读取图片
+            filepath = os.path.join(Input_folder, filename)
+            image = cv2.imread(filepath, 0)  # 以灰度模式读取
 
             erode_image = cv2.erode(image, kernel, iterations = 10)
             # 进行膨胀操作
