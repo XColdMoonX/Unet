@@ -4,8 +4,9 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 import math
-from numpy.core.defchararray import array
 import configparser
+from numpy.core.defchararray import array
+from tqdm import tqdm
 
 global_variable = 0
 global_variable2 = 0
@@ -375,19 +376,26 @@ def Merge(input_folder, output_folder):
         ]
     )
 
-    for i in range(0, len(files) - 1):
+    for i in tqdm(range(0, len(files) - 1), desc="Merging Images 1"):
         global_variable = i
         img_path_1 = os.path.join(input_folder, files[i])
         img_path_2 = os.path.join(input_folder, files[i + 1])
+        
+        output_file_2_path = os.path.join(output_folder_2, f"concat2_{i}.jpg")
+        if os.path.exists(output_file_2_path):
+            print(f"File {output_file_2_path} already exists in output directory. Skipping...")
+            continue
+        
         if not os.path.isfile(img_path_1) or not os.path.isfile(img_path_2):
             print(f"File not found: {img_path_1} or {img_path_2}")
             continue  # Skip this iteration if either file is missing
-        firstresult = handleMulti(img_path_1, img_path_2, isShow=False)
+            
+        firstresult, _ = handle(img_path_1, img_path_2, isShow=False)
         if firstresult is None:
             print(f"Failed to merge {img_path_1} and {img_path_2}")
             continue  # Skip saving if merging failed
-        output_file_2_path = os.path.join(output_folder_2, f"concat2_{i}.jpg")
         cv2.imwrite(output_file_2_path, cv2.cvtColor(firstresult, cv2.COLOR_RGB2BGR))
+        
     print("First Merging completed.")
 
     files2 = sorted(
@@ -401,23 +409,24 @@ def Merge(input_folder, output_folder):
         output_folder_2, files2[0]
     )  # Fixed to use files2[0] instead of files[0]
 
-    for i in range(1, len(files2)):
+    for i in tqdm(range(1, len(files2)), desc="Final Merging"):
         global_variable2 = 2
         global_variable = i
-        next_file = os.path.join(
-            output_folder_2, files2[i]
-        )  # Fixed to use files from output_folder_2
+        
+        next_file = os.path.join(output_folder_2, f"concat2_{i}.jpg")
         if not os.path.isfile(current_file) or not os.path.isfile(next_file):
             print(f"File not found: {current_file} or {next_file}")
             continue  # Skip this iteration if either file is missing
-        finalresult = handleMulti(current_file, next_file, isShow=False)
+            
+        finalresult, _ = handle(current_file, next_file, isShow=False)
         if finalresult is None:
             print(f"Failed to merge {current_file} and {next_file}")
             continue  # Skip saving if merging failed
+            
         output_file_path = os.path.join(output_folder_2, f"concatfinal_{i}.jpg")
         cv2.imwrite(output_file_path, cv2.cvtColor(finalresult, cv2.COLOR_RGB2BGR))
         current_file = output_file_path
-        if i == len(files2):
+        if i == (len(files2)-1):
             output_file_path = os.path.join(output_folder, f"finalresult.jpg")
             cv2.imwrite(output_file_path, cv2.cvtColor(finalresult, cv2.COLOR_RGB2BGR))
             global_variable = i + 1
