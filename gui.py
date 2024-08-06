@@ -8,6 +8,8 @@ from mask_dilation import dilation
 from mask_to_white import batch_convert
 from mask_to_make_color_river import mask_cut_image
 from concat_pic import Merge
+from image_fill import fill
+from connect_component import component
 
 
 def select_file(entry):
@@ -46,6 +48,12 @@ def save_config():
     feature_dir = feature_dir_entry.get() or os.path.join(
         base_dir, os.path.basename(origin_dir) + "_Feature"
     )
+    fill_dir = fill_dir_entry.get() or os.path.join(
+        base_dir, os.path.basename(origin_dir) + "_Pre_Fill"
+    )
+    max_dir = max_dir_entry.get() or os.path.join(
+        base_dir, os.path.basename(origin_dir) + "_Pre_Max"
+    )
 
     os.makedirs(mask_dir, exist_ok=True)
     os.makedirs(dilation_dir, exist_ok=True)
@@ -53,6 +61,8 @@ def save_config():
     os.makedirs(cut_dir, exist_ok=True)
     os.makedirs(merger_dir, exist_ok=True)
     os.makedirs(feature_dir, exist_ok=True)
+    os.makedirs(fill_dir, exist_ok=True)
+    os.makedirs(max_dir, exist_ok=True)
 
     config["Paths"] = {
         "PredictPath": predict_path_entry.get(),
@@ -64,6 +74,8 @@ def save_config():
         "CutDir": cut_dir,
         "MergerDir": merger_dir,
         "FeatureDir": feature_dir,
+        "FillDir": fill_dir,
+        "MaxDir": max_dir,
     }
 
     config["Dilation"] = {
@@ -97,6 +109,8 @@ def execute_functions():
     CutDir = config["Paths"]["CutDir"]
     MergerDir = config["Paths"]["MergerDir"]
     FeatureDir = config["Paths"]["FeatureDir"]
+    FillDir = config["Paths"]["FillDir"]
+    MaxDir = config["Paths"]["MaxDir"]
 
     os.makedirs(MaskDir, exist_ok=True)
     os.makedirs(DilationDir, exist_ok=True)
@@ -104,16 +118,24 @@ def execute_functions():
     os.makedirs(CutDir, exist_ok=True)
     os.makedirs(MergerDir, exist_ok=True)
     os.makedirs(FeatureDir, exist_ok=True)
+    os.makedirs(FillDir, exist_ok=True)
+    os.makedirs(MaxDir, exist_ok=True)
 
     print("\033[31;40m Start \033[0m ")
 
     all_predict(PredictPath, ModelPath, OriginDir, MaskDir)
     print("\033[31;40m Predict Done \033[0m ")
 
-    dilation(MaskDir, DilationDir)
+    fill(MaskDir, FillDir)
+    print("\033[31;40m Fill Done \033[0m ")
+
+    dilation(FillDir, DilationDir)
     print("\033[31;40m Dilation Done \033[0m ")
 
-    batch_convert(DilationDir, DilationWhiteDir)
+    component(DilationDir, MaxDir)
+    print("\033[31;40m Connect Component Done \033[0m ")
+
+    batch_convert(MaxDir, DilationWhiteDir)
     print("\033[31;40m Convert Done \033[0m ")
 
     mask_cut_image(DilationWhiteDir, OriginDir, CutDir)
@@ -136,7 +158,9 @@ def load_config():
     model_path_entry.insert(0, config["Paths"].get("ModelPath", ""))
     origin_dir_entry.insert(0, config["Paths"].get("OriginDir", ""))
     mask_dir_entry.insert(0, config["Paths"].get("MaskDir", ""))
+    fill_dir_entry.insert(0, config["Paths"].get("FillDir", ""))
     dilation_dir_entry.insert(0, config["Paths"].get("DilationDir", ""))
+    max_dir_entry.insert(0, config["Paths"].get("MaxDir", ""))
     dilation_white_dir_entry.insert(0, config["Paths"].get("DilationWhiteDir", ""))
     cut_dir_entry.insert(0, config["Paths"].get("CutDir", ""))
     merger_dir_entry.insert(0, config["Paths"].get("MergerDir", ""))
@@ -159,6 +183,8 @@ def clear_paths():
     config["Paths"]["ModelPath"] = ""
     config["Paths"]["OriginDir"] = ""
     config["Paths"]["MaskDir"] = ""
+    config["Paths"]["FillDir"] = ""
+    config["Paths"]["MaxDir"] = ""
     config["Paths"]["DilationDir"] = ""
     config["Paths"]["DilationWhiteDir"] = ""
     config["Paths"]["CutDir"] = ""
@@ -172,6 +198,8 @@ def clear_paths():
     model_path_entry.delete(0, tk.END)
     origin_dir_entry.delete(0, tk.END)
     mask_dir_entry.delete(0, tk.END)
+    fill_dir_entry.delete(0, tk.END)
+    max_dir_entry.delete(0, tk.END)
     dilation_dir_entry.delete(0, tk.END)
     dilation_white_dir_entry.delete(0, tk.END)
     cut_dir_entry.delete(0, tk.END)
@@ -183,7 +211,9 @@ def clear_paths():
 
 def clear_related_paths(*args):
     mask_dir_entry.delete(0, tk.END)
+    fill_dir_entry.delete(0, tk.END)
     dilation_dir_entry.delete(0, tk.END)
+    max_dir_entry.delete(0, tk.END)
     dilation_white_dir_entry.delete(0, tk.END)
     cut_dir_entry.delete(0, tk.END)
     merger_dir_entry.delete(0, tk.END)
@@ -221,9 +251,17 @@ tk.Label(root, text="Mask Directory:").grid(row=3, column=0, padx=10, pady=5)
 mask_dir_entry = tk.Entry(root, width=50)
 mask_dir_entry.grid(row=3, column=1, padx=10, pady=5)
 
+tk.Label(root, text="Fill Directory:").grid(row=3, column=0, padx=10, pady=5)
+fill_dir_entry = tk.Entry(root, width=50)
+fill_dir_entry.grid(row=3, column=1, padx=10, pady=5)
+
 tk.Label(root, text="Dilation Directory:").grid(row=4, column=0, padx=10, pady=5)
 dilation_dir_entry = tk.Entry(root, width=50)
 dilation_dir_entry.grid(row=4, column=1, padx=10, pady=5)
+
+tk.Label(root, text="Max Directory:").grid(row=4, column=0, padx=10, pady=5)
+max_dir_entry = tk.Entry(root, width=50)
+max_dir_entry.grid(row=4, column=1, padx=10, pady=5)
 
 tk.Label(root, text="Dilation White Directory:").grid(row=5, column=0, padx=10, pady=5)
 dilation_white_dir_entry = tk.Entry(root, width=50)
