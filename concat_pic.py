@@ -119,6 +119,7 @@ def handle(path1, path2, isShow=True):
 
     feature_extractor = config["Concat"]["feature_extractor"]
     feature_matching = config["Concat"]["feature_matching"]
+    reprojThresh_index = float(config["Concat"]["reprojThresh_index"])
     ratio = float(config["Concat"]["ratio"])
     """
     读取原始图像
@@ -212,7 +213,7 @@ def handle(path1, path2, isShow=True):
     计算两张图的透视关系
     """
     matchCount = len(matches)
-    M = getHomography(kpsA, kpsB, matches, reprojThresh=4)
+    M = getHomography(kpsA, kpsB, matches, reprojThresh=reprojThresh_index)
     if M is None:
         print("Error!")
     (matches, H, status) = M
@@ -316,44 +317,44 @@ def handleMulti(*args, isShow=True):
 # ================================================================== #
 #                     主函数
 # ================================================================== #
-if __name__ == "__main__":
-    """
-    处理两张图，可以打印特征点与对应关系
-    """
-    # result, _ = handle("./input/222.png", "./input/111.png", isShow=True)
-    # if not result is None:
-    #     cv2.imshow("result", result[:, :, [2, 1, 0]])
-    #     plt.show()
-    #     cv2.waitKey(0)
-    # else:
-    #     print("没有找到对应特征点,无法合并")
-    # exit()
+# if __name__ == "__main__":
+#     """
+#     处理两张图，可以打印特征点与对应关系
+#     """
+#     # result, _ = handle("./input/222.png", "./input/111.png", isShow=True)
+#     # if not result is None:
+#     #     cv2.imshow("result", result[:, :, [2, 1, 0]])
+#     #     plt.show()
+#     #     cv2.waitKey(0)
+#     # else:
+#     #     print("没有找到对应特征点,无法合并")
+#     # exit()
 
-    """
-    处理多张图，不可以打印特征点与对应关系
-    """
-    # result = handleMulti(
-    #                     "./input/migong (1).png",
-    #                     "./input/migong (2).png",
-    #                     "./input/migong (3).png",
-    #                      isShow=True)
-    result = handleMulti(
-        "./input/111.png", "./input/222.png", "./input/333.png", isShow=True
-    )
-    # result = handleMulti("./input/foto7A.jpg", "./input/foto7B.jpg") #合并的不好的图
-    # result = handleMulti("./input/intel_lab (1).png",
-    #                     "./input/intel_lab (2).png",
-    #                     "./input/intel_lab (3).png",
-    #                     "./input/intel_lab (4).png",
-    #                     "./input/intel_lab (5).png",
-    #                     "./input/intel_lab (6).png",
-    #                     isShow=True)
-    if not result is None:
-        cv2.imshow("result", result[:, :, [2, 1, 0]])
-        plt.show()
-        cv2.waitKey(0)
-    else:
-        print("没有找到对应特征点,无法合并")
+#     """
+#     处理多张图，不可以打印特征点与对应关系
+#     """
+#     # result = handleMulti(
+#     #                     "./input/migong (1).png",
+#     #                     "./input/migong (2).png",
+#     #                     "./input/migong (3).png",
+#     #                      isShow=True)
+#     result = handleMulti(
+#         "./input/111.png", "./input/222.png", "./input/333.png", isShow=True
+#     )
+#     # result = handleMulti("./input/foto7A.jpg", "./input/foto7B.jpg") #合并的不好的图
+#     # result = handleMulti("./input/intel_lab (1).png",
+#     #                     "./input/intel_lab (2).png",
+#     #                     "./input/intel_lab (3).png",
+#     #                     "./input/intel_lab (4).png",
+#     #                     "./input/intel_lab (5).png",
+#     #                     "./input/intel_lab (6).png",
+#     #                     isShow=True)
+#     if not result is None:
+#         cv2.imshow("result", result[:, :, [2, 1, 0]])
+#         plt.show()
+#         cv2.waitKey(0)
+#     else:
+#         print("没有找到对应特征点,无法合并")
 
 
 def Merge(input_folder, output_folder):
@@ -434,3 +435,13 @@ def Merge(input_folder, output_folder):
             cv2.imwrite(output_file_path, cv2.cvtColor(finalresult, cv2.COLOR_RGB2BGR))
             global_variable = i + 1
     print("Final Merging completed.")
+
+
+def main():
+    input_folder = r"C:\Users\yuki1\Desktop\888"
+    output_folder = r"C:\Users\yuki1\Desktop\11"
+    Merge(input_folder, output_folder)
+
+
+if __name__ == "__main__":
+    main()

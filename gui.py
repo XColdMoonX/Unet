@@ -88,6 +88,7 @@ def save_config():
         "feature_extractor": feature_extractor_var.get(),
         "feature_matching": feature_matching_var.get(),
         "ratio": ratio_entry.get(),
+        "reprojThresh_index": reprojThresh_index_entry.get(),
     }
 
     with open("config.ini", "w") as configfile:
@@ -148,6 +149,8 @@ def execute_functions():
 def update_entry(value):
     ratio_entry.delete(0, tk.END)
     ratio_entry.insert(0, format(float(value), ".2f"))
+    reprojThresh_index_entry.delete(0, tk.END)
+    reprojThresh_index_entry.insert(0, format(float(value), ".2f"))
 
 
 def load_config():
@@ -173,6 +176,7 @@ def load_config():
     feature_extractor_var.set(config["Concat"].get("feature_extractor", "sift"))
     feature_matching_var.set(config["Concat"].get("feature_matching", "bf"))
     ratio_entry.insert(0, config["Concat"].get("ratio", ""))
+    reprojThresh_index_entry.insert(0, config["Concat"].get("reprojThresh_index", ""))
 
 
 def clear_paths():
@@ -314,16 +318,25 @@ ratio_entry.grid(row=13, column=1, padx=10, pady=5)
 ratio_scale = ttk.Scale(root, from_=0, to=1, orient="horizontal", command=update_entry)
 ratio_scale.grid(row=13, column=2, padx=10, pady=5)
 
+tk.Label(root, text="reprojThresh:").grid(row=14, column=0, padx=10, pady=5)
+reprojThresh_index_entry = tk.Entry(root, width=50)
+reprojThresh_index_entry.grid(row=14, column=1, padx=10, pady=5)
+
+reprojThresh_scale = ttk.Scale(
+    root, from_=0, to=1, orient="horizontal", command=update_entry
+)
+reprojThresh_scale.grid(row=14, column=2, padx=10, pady=5)
+
 tk.Button(root, text="Save Config", command=save_config).grid(
-    row=14, column=0, padx=10, pady=20
+    row=15, column=0, padx=10, pady=20
 )
 
 tk.Button(root, text="Execute", command=execute_functions).grid(
-    row=14, column=1, padx=10, pady=20
+    row=15, column=1, padx=10, pady=20
 )
 
 tk.Button(root, text="Clear Paths", command=clear_paths).grid(
-    row=14, column=2, padx=10, pady=20
+    row=15, column=2, padx=10, pady=20
 )
 
 load_config()
